@@ -22,9 +22,10 @@ export default function CoordinatorDashboard() {
 
   useEffect(() => {
     fetchEvents();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
-  const fetchEvents = async () => {
+  async function fetchEvents() {
     const token = localStorage.getItem('token');
     if (!token) {
       router.push('/login/faculty');

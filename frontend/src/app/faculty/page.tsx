@@ -57,7 +57,7 @@ export default function FacultyPortal() {
           Authorize Academic Leave.
         </h1>
         <p className="text-lg text-white/60 max-w-2xl mx-auto leading-relaxed font-light">
-          Before permitting a student to leave the classroom for an event, scan their digital pass to verify its authenticity and confirm the event's current active status.
+          Before permitting a student to leave the classroom for an event, scan their digital pass to verify its authenticity and confirm the event&apos;s current active status.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-12">
@@ -73,7 +73,7 @@ export default function FacultyPortal() {
             <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
             <Shield className="w-10 h-10 text-blue-400 mb-6 drop-shadow-[0_0_15px_rgba(59,130,246,0.5)] relative z-10" />
             <h3 className="text-2xl font-bold mb-3 text-white relative z-10">Verified Attendance</h3>
-            <p className="text-white/50 leading-relaxed font-light relative z-10 text-lg">Scan students' digital passes to officially mark them as attending the event and excuse their absence from class.</p>
+            <p className="text-white/50 leading-relaxed font-light relative z-10 text-lg">Scan students&apos; digital passes to officially mark them as attending the event and excuse their absence from class.</p>
           </div>
           <div className="p-10 rounded-[2rem] bg-white/[0.02] border border-white/10 backdrop-blur-2xl hover:bg-white/[0.04] transition-colors shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] relative overflow-hidden group">
             <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
