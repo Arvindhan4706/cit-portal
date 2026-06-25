@@ -34,7 +34,7 @@ export default function FacultyScanner() {
     const token = localStorage.getItem('token');
     
     try {
-      const res = await axios.post('http://localhost:5001/api/attendance/verify', {
+      const res = await axios.post('/api/attendance/verify', {
         qrToken: decodedText
       }, {
         headers: { Authorization: `Bearer ${token}` }

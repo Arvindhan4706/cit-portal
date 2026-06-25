@@ -28,7 +28,7 @@ export default function CoordinatorDashboard() {
 
     try {
       // NOTE: For demo purposes, we fetch all events. In a real app, you'd fetch only this coordinator's events.
-      const res = await axios.get('http://localhost:5001/api/events');
+      const res = await axios.get('/api/events');
       setEvents(res.data);
     } catch (err: any) {
       console.error(err);
@@ -47,7 +47,7 @@ export default function CoordinatorDashboard() {
     if (!token) return;
 
     try {
-      await axios.post('http://localhost:5001/api/events', {
+      await axios.post('/api/events', {
         ...newEvent,
         description: 'New Event',
         clubId: null // We skip clubId for simplicity in this demo

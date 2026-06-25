@@ -44,7 +44,7 @@ export default function ImportRegistrations() {
         throw new Error('No emails found in the uploaded file.');
       }
 
-      const res = await axios.post(`http://localhost:5001/api/events/${eventId}/import`, {
+      const res = await axios.post(`/api/events/${eventId}/import`, {
         emails: Array.from(new Set(emails)) // Remove duplicates
       });
 

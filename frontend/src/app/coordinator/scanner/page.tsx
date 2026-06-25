@@ -32,7 +32,7 @@ export default function CoordinatorScanner() {
     const token = localStorage.getItem('token');
     
     try {
-      const res = await axios.post('http://localhost:5001/api/attendance/scan', {
+      const res = await axios.post('/api/attendance/scan', {
         qrToken: decodedText
       }, {
         headers: { Authorization: `Bearer ${token}` }

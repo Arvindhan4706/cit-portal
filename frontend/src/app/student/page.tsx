@@ -27,7 +27,7 @@ export default function StudentDashboard() {
       }
 
       try {
-        const res = await axios.get('http://localhost:5001/api/auth/me', {
+        const res = await axios.get('/api/auth/me', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setUser(res.data);
@@ -58,7 +58,7 @@ export default function StudentDashboard() {
 
       try {
         setQrError(null);
-        const res = await axios.get(`http://localhost:5001/api/attendance/qr/${selectedEventId}`, {
+        const res = await axios.get(`/api/attendance/qr/${selectedEventId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setQrToken(res.data.qrToken);

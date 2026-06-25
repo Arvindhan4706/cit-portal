@@ -31,7 +31,7 @@ export default function AuthForm({ role, onSuccess, title, subtitle }: AuthFormP
     }
 
     try {
-      const res = await axios.post('http://localhost:5001/api/auth/login', {
+      const res = await axios.post('/api/auth/login', {
         email,
         password,
         expectedRole: role
