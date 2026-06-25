@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, CheckCircle2, XCircle, Loader2 } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, XCircle, Terminal } from 'lucide-react';
 import QRScanner from '@/components/QRScanner';
 import axios from 'axios';
 
@@ -38,13 +38,13 @@ export default function CoordinatorScanner() {
         headers: { Authorization: `Bearer ${token}` }
       });
       setResult(res.data);
-      // Haptic feedback
+      // Haptic feedback (Vibrate for 100ms)
       if (typeof navigator !== 'undefined' && navigator.vibrate) {
         navigator.vibrate(100);
       }
     } catch (err: any) {
       setError(err.response?.data?.error || 'Failed to verify QR Code.');
-      // Error haptic feedback
+      // Error haptic feedback (Vibrate twice quickly)
       if (typeof navigator !== 'undefined' && navigator.vibrate) {
         navigator.vibrate([50, 50, 50]);
       }
@@ -54,39 +54,40 @@ export default function CoordinatorScanner() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 p-6 relative">
-      <nav className="max-w-md mx-auto flex items-center justify-between py-6 mb-8 border-b border-slate-200">
-        <Link href="/coordinator" className="text-slate-600 hover:text-blue-600 transition-colors flex items-center gap-2 font-semibold text-sm bg-white px-4 py-2 border border-slate-200 rounded-lg shadow-sm">
+    <div className="min-h-screen bg-slate-950 text-white p-6 relative overflow-hidden">
+      <div className="absolute top-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-blue-600/10 blur-[120px] pointer-events-none" />
+
+      <nav className="max-w-md mx-auto flex items-center justify-between py-6 mb-8 border-b border-white/5 relative z-10">
+        <Link href="/coordinator" className="text-white/50 hover:text-blue-400 transition-colors flex items-center gap-2 font-mono text-sm bg-white/5 px-4 py-2 border border-white/10 rounded-md">
           <ArrowLeft className="w-4 h-4" /> Exit Scanner
         </Link>
-        <div className="font-bold text-slate-900 text-sm tracking-wide uppercase">Venue Scanner</div>
+        <div className="font-bold text-blue-400 text-sm font-mono tracking-widest uppercase">Venue Scanner</div>
       </nav>
 
-      <main className="max-w-md mx-auto space-y-8">
+      <main className="max-w-md mx-auto space-y-8 relative z-10">
         {!result && !error && (
           <div className="space-y-6">
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Scan Digital Pass</h2>
-              <p className="text-slate-500 mt-2 text-sm">Verify attendance & log entry.</p>
+              <h2 className="text-2xl font-black text-white tracking-tight">Scan Digital Pass</h2>
+              <p className="text-white/50 mt-2 font-mono text-sm">Verify attendance & auto-generate OD.</p>
             </div>
-            <div className="bg-white border border-slate-200 p-2 rounded-2xl shadow-sm">
+            <div className="bg-black border border-blue-500/30 p-2 rounded-xl shadow-[0_0_30px_rgba(59,130,246,0.1)]">
               <QRScanner onScanSuccess={handleScan} />
             </div>
-            {loading && <p className="text-center text-blue-600 font-semibold text-sm flex items-center justify-center gap-2"><Loader2 className="w-4 h-4 animate-spin"/> Verifying...</p>}
+            {loading && <p className="text-center text-blue-400 animate-pulse font-mono text-sm flex items-center justify-center gap-2"><Terminal className="w-4 h-4"/> Verifying...</p>}
           </div>
         )}
 
         {result && (
-          <div className="p-8 rounded-2xl bg-white border border-green-200 shadow-sm text-center space-y-6 relative overflow-hidden">
-            <div className="absolute top-0 inset-x-0 h-1 bg-green-500" />
-            <CheckCircle2 className="w-16 h-16 text-green-500 mx-auto" />
+          <div className="p-8 rounded-2xl bg-green-500/10 border border-green-500/30 shadow-[0_0_40px_rgba(34,197,94,0.1)] text-center space-y-6 backdrop-blur-xl">
+            <CheckCircle2 className="w-16 h-16 text-green-400 mx-auto drop-shadow-[0_0_15px_rgba(34,197,94,0.5)]" />
             <div>
-              <h2 className="text-2xl font-bold text-slate-900">Attendance Logged</h2>
-              <p className="text-green-600 font-semibold mt-1 text-sm">{result.message}</p>
+              <h2 className="text-2xl font-black text-white">Attendance Logged</h2>
+              <p className="text-green-400 font-bold mt-1 font-mono text-sm">{result.message}</p>
             </div>
             <button 
               onClick={() => setResult(null)} 
-              className="w-full py-4 bg-green-50 hover:bg-green-100 border border-green-200 text-green-700 rounded-xl font-bold transition-colors"
+              className="w-full py-4 bg-green-500/20 hover:bg-green-500/30 border border-green-500/50 text-green-400 rounded-xl font-bold transition-all shadow-[0_0_15px_rgba(34,197,94,0.2)]"
             >
               Scan Next Pass
             </button>
@@ -94,16 +95,15 @@ export default function CoordinatorScanner() {
         )}
 
         {error && (
-          <div className="p-8 rounded-2xl bg-white border border-red-200 shadow-sm text-center space-y-6 relative overflow-hidden">
-            <div className="absolute top-0 inset-x-0 h-1 bg-red-500" />
-            <XCircle className="w-16 h-16 text-red-500 mx-auto" />
+          <div className="p-8 rounded-2xl bg-red-500/10 border border-red-500/30 shadow-[0_0_40px_rgba(239,68,68,0.1)] text-center space-y-6 backdrop-blur-xl">
+            <XCircle className="w-16 h-16 text-red-400 mx-auto drop-shadow-[0_0_15px_rgba(239,68,68,0.5)]" />
             <div>
-              <h2 className="text-2xl font-bold text-slate-900">Verification Failed</h2>
-              <p className="text-red-600 font-semibold mt-2 text-sm">{error}</p>
+              <h2 className="text-2xl font-black text-white">Verification Failed</h2>
+              <p className="text-red-400 font-bold mt-2 font-mono text-sm">{error}</p>
             </div>
             <button 
               onClick={() => setError(null)} 
-              className="w-full py-4 bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 rounded-xl font-bold transition-colors"
+              className="w-full py-4 bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 text-red-400 rounded-xl font-bold transition-all shadow-[0_0_15px_rgba(239,68,68,0.2)]"
             >
               Try Again
             </button>

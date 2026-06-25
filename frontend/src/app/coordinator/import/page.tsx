@@ -57,17 +57,17 @@ export default function ImportRegistrations() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white p-6 md:p-12 relative overflow-hidden">
+    <div className="min-h-screen bg-slate-950 text-white p-6 md:p-12 relative overflow-hidden">
       {/* Glow Effects */}
-      <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-cyan-500/10 blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-purple-500/10 blur-[120px] pointer-events-none" />
+      <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-500/10 blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-sky-500/10 blur-[120px] pointer-events-none" />
 
       <header className="mb-12 flex justify-between items-center max-w-4xl mx-auto relative z-10 border-b border-white/5 pb-6">
         <div>
-          <Link href="/coordinator" className="text-white/50 hover:text-cyan-400 transition-colors flex items-center gap-2 font-mono text-sm mb-4">
+          <Link href="/coordinator" className="text-white/50 hover:text-blue-400 transition-colors flex items-center gap-2 font-mono text-sm mb-4">
             <ArrowLeft className="w-4 h-4" /> Back to Dashboard
           </Link>
-          <h1 className="text-3xl font-black bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-purple-500 tracking-tighter">
+          <h1 className="text-3xl font-black bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-sky-500 tracking-tighter">
             Upload Registrations
           </h1>
         </div>
@@ -80,29 +80,29 @@ export default function ImportRegistrations() {
 
         <div className="bg-white/5 border border-white/10 backdrop-blur-md rounded-3xl p-8 space-y-8">
           <div className="space-y-3">
-            <label className="block text-sm font-mono text-cyan-400">Event ID (Copy from Dashboard)</label>
+            <label className="block text-sm font-mono text-blue-400">Event ID (Copy from Dashboard)</label>
             <input 
               type="text" 
               value={eventId}
               onChange={(e) => setEventId(e.target.value)}
               placeholder="e.g., 550e8400-e29b-41d4-a716-446655440000"
-              className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-cyan-400 transition-colors font-mono text-sm"
+              className="w-full bg-black/50 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:border-blue-400 transition-colors font-mono text-sm"
             />
           </div>
 
           <div className="space-y-3">
-            <label className="block text-sm font-mono text-cyan-400">Upload CSV or Text file</label>
-            <div className="relative border-2 border-dashed border-white/20 hover:border-cyan-400/50 transition-colors rounded-2xl bg-black/30 flex flex-col items-center justify-center p-12 text-center group">
+            <label className="block text-sm font-mono text-blue-400">Upload CSV or Text file</label>
+            <div className="relative border-2 border-dashed border-white/20 hover:border-blue-400/50 transition-colors rounded-2xl bg-black/30 flex flex-col items-center justify-center p-12 text-center group">
               <input 
                 type="file" 
                 accept=".csv,.txt"
                 onChange={handleFileChange}
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               />
-              <UploadCloud className="w-10 h-10 text-white/30 group-hover:text-cyan-400 transition-colors mb-4" />
+              <UploadCloud className="w-10 h-10 text-white/30 group-hover:text-blue-400 transition-colors mb-4" />
               {file ? (
                 <div>
-                  <p className="font-bold text-cyan-400 flex items-center gap-2 justify-center"><FileType className="w-4 h-4"/> {file.name}</p>
+                  <p className="font-bold text-blue-400 flex items-center gap-2 justify-center"><FileType className="w-4 h-4"/> {file.name}</p>
                   <p className="text-xs text-white/50 mt-1">{(file.size / 1024).toFixed(2)} KB</p>
                 </div>
               ) : (
@@ -117,7 +117,7 @@ export default function ImportRegistrations() {
           <button 
             onClick={handleUpload}
             disabled={!file || !eventId || loading}
-            className="w-full py-4 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-xl font-bold hover:shadow-[0_0_20px_rgba(6,182,212,0.4)] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full py-4 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl font-bold hover:shadow-[0_0_20px_rgba(59,130,246,0.4)] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Upload and Process'}
           </button>
@@ -135,7 +135,7 @@ export default function ImportRegistrations() {
               <p className="text-white/80 mt-1">{result.message}</p>
               <div className="mt-4 flex gap-4 text-sm font-mono">
                 <span className="text-white/50">Found: {result.totalProcessed}</span>
-                <span className="text-cyan-400">Imported: {result.importedCount}</span>
+                <span className="text-blue-400">Imported: {result.importedCount}</span>
               </div>
             </div>
           </motion.div>
