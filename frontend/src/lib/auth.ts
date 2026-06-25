@@ -1,11 +1,13 @@
 import jwt from 'jsonwebtoken';
 import { NextRequest, NextResponse } from 'next/server';
 
-const JWT_SECRET = process.env.JWT_SECRET;
-if (!JWT_SECRET) {
-  console.error('FATAL ERROR: JWT_SECRET is not defined.');
-  process.exit(1);
-}
+const getJwtSecret = () => {
+  const secret = process.env.JWT_SECRET;
+  if (!secret) {
+    throw new Error('FATAL ERROR: JWT_SECRET is not defined.');
+  }
+  return secret;
+};
 
 export const authenticate = (req: NextRequest) => {
   const authHeader = req.headers.get('authorization');
