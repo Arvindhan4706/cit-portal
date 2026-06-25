@@ -1,0 +1,138 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  STUDENT
+  COORDINATOR
+  FACULTY
+  ADMIN
+}
+
+enum RegistrationStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+enum ODStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id            String         @id @default(uuid())
+  name          String
+  email         String         @unique
+  roll_no       String?        @unique
+  department    String?
+  year          Int?
+  role          Role           @default(STUDENT)
+  password      String
+  
+  // Relations
+  registrations Registration[]
+  od_requests   ODRequest[]
+  certificates  Certificate[]
+  clubs         Club[]         @relation("ClubHead")
+
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model Club {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  headId      String?
+  head        User?    @relation("ClubHead", fields: [headId], references: [id])
+  
+  // Relations
+  events      Event[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Event {
+  id          String         @id @default(uuid())
+  title       String
+  description String
+  venue       String
+  date        DateTime
+  capacity    Int
+  
+  clubId      String
+  club        Club           @relation(fields: [clubId], references: [id])
+  
+  // Relations
+  registrations Registration[]
+  od_requests   ODRequest[]
+  certificates  Certificate[]
+
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}
+
+model Registration {
+  id         String             @id @default(uuid())
+  qr_code    String             @unique
+  status     RegistrationStatus @default(PENDING)
+  
+  studentId  String
+  student    User               @relation(fields: [studentId], references: [id])
+  
+  eventId    String
+  event      Event              @relation(fields: [eventId], references: [id])
+  
+  // Relations
+  attendance Attendance?
+
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+  
+  @@unique([studentId, eventId])
+}
+
+model Attendance {
+  id             String       @id @default(uuid())
+  checkin_time   DateTime     @default(now())
+  verified       Boolean      @default(true)
+  
+  registrationId String       @unique
+  registration   Registration @relation(fields: [registrationId], references: [id])
+}
+
+model ODRequest {
+  id         String    @id @default(uuid())
+  status     ODStatus  @default(PENDING)
+  
+  studentId  String
+  student    User      @relation(fields: [studentId], references: [id])
+  
+  eventId    String
+  event      Event     @relation(fields: [eventId], references: [id])
+  
+  approvedById String?
+
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+model Certificate {
+  id              String   @id @default(uuid())
+  certificate_url String
+  
+  studentId       String
+  student         User     @relation(fields: [studentId], references: [id])
+  
+  eventId         String
+  event           Event    @relation(fields: [eventId], references: [id])
+
+  createdAt       DateTime @default(now())
+}
