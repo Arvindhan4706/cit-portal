@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import QRCode from 'react-qr-code';
 import { RefreshCw, MapPin, Calendar, Clock, Ticket, AlertTriangle, ArrowLeft } from 'lucide-react';
+import { motion } from 'framer-motion';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
@@ -105,19 +106,19 @@ export default function StudentDashboard() {
           <p className="text-white/50 font-mono text-sm mt-1">Logged in as {user?.name} ({user?.roll_no})</p>
         </div>
         <div className="flex items-center gap-6">
-          <button onClick={handleLogout} className="text-xs font-mono text-white/50 hover:text-cyan-400 flex items-center gap-2">
+          <button onClick={handleLogout} className="text-xs font-mono text-white/50 hover:text-cyan-400 flex items-center gap-2 transition-colors">
             <ArrowLeft className="w-4 h-4" /> Logout
           </button>
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-cyan-500 to-purple-500 flex items-center justify-center font-bold text-lg shadow-[0_0_20px_rgba(6,182,212,0.3)]">
+          <motion.div whileHover={{ scale: 1.1, rotate: 5 }} className="w-12 h-12 rounded-xl bg-gradient-to-tr from-cyan-500 to-purple-500 flex items-center justify-center font-bold text-lg shadow-[0_0_20px_rgba(6,182,212,0.3)]">
             {user?.name?.[0] || 'S'}
-          </div>
+          </motion.div>
         </div>
       </header>
 
       <main className="max-w-5xl mx-auto grid md:grid-cols-3 gap-8 relative z-10">
         
         {/* Left Column: My Events */}
-        <div className="md:col-span-2 space-y-6">
+        <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5 }} className="md:col-span-2 space-y-6">
           <h2 className="text-xl font-bold border-b border-white/10 pb-4 text-cyan-400 font-mono">Registered Events</h2>
           
           {user?.registrations?.length === 0 ? (
@@ -125,9 +126,13 @@ export default function StudentDashboard() {
               No active registrations found.
             </div>
           ) : (
-            user?.registrations?.map((reg: any) => (
-              <div 
+            user?.registrations?.map((reg: any, i: number) => (
+              <motion.div 
                 key={reg.id} 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                whileHover={{ scale: 1.01 }}
                 onClick={() => setSelectedEventId(reg.eventId)}
                 className={`border rounded-3xl p-8 transition-all cursor-pointer relative overflow-hidden backdrop-blur-xl shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] ${
                   selectedEventId === reg.eventId 
@@ -157,10 +162,10 @@ export default function StudentDashboard() {
                     Show Pass
                   </button>
                 )}
-              </div>
+              </motion.div>
             ))
           )}
-        </div>
+        </motion.div>
 
         {/* Right Column: QR Code */}
         <div className="space-y-6">

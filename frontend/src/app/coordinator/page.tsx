@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Plus, UploadCloud, Users, Calendar, ScanLine, ArrowLeft, Terminal } from 'lucide-react';
+import { Plus, UploadCloud, Users, Calendar, ScanLine, ArrowLeft, Terminal, Download } from 'lucide-react';
 import axios from 'axios';
+import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 
 export default function CoordinatorDashboard() {
@@ -66,6 +67,25 @@ export default function CoordinatorDashboard() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     router.push('/');
+  };
+
+  const downloadCSV = async (eventId: string, eventTitle: string) => {
+    const token = localStorage.getItem('token');
+    try {
+      const res = await axios.get(`/api/events/${eventId}/attendance/csv`, {
+        headers: { Authorization: `Bearer ${token}` },
+        responseType: 'blob'
+      });
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `Attendance_${eventTitle.replace(/[^a-zA-Z0-9]/g, '_')}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (err) {
+      alert('Failed to download CSV. Maybe no attendance records exist yet.');
+    }
   };
 
   if (loading) {
@@ -159,10 +179,16 @@ export default function CoordinatorDashboard() {
           <h2 className="text-lg font-bold text-white/80 border-b border-white/10 pb-4 mb-6 font-mono">Active Events</h2>
           <div className="space-y-4">
             {events.length === 0 ? (
-              <div className="text-center py-16 text-white/30 font-mono text-sm border border-white/10 rounded-3xl bg-white/[0.02] backdrop-blur-xl">No events active in the database.</div>
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16 text-white/30 font-mono text-sm border border-white/10 rounded-3xl bg-white/[0.02] backdrop-blur-xl">No events active in the database.</motion.div>
             ) : (
-              events.map((event) => (
-                <div key={event.id} className="flex flex-col md:flex-row justify-between items-center bg-white/[0.02] backdrop-blur-2xl border border-white/10 rounded-3xl p-8 hover:bg-white/[0.04] transition-colors group shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] relative overflow-hidden">
+              events.map((event, i) => (
+                <motion.div 
+                  key={event.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.1 }}
+                  className="flex flex-col md:flex-row justify-between items-center bg-white/[0.02] backdrop-blur-2xl border border-white/10 rounded-3xl p-8 hover:bg-white/[0.04] transition-colors group shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] relative overflow-hidden"
+                >
                   <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
                   <div className="mb-6 md:mb-0 w-full md:w-auto relative z-10">
                     <h3 className="text-2xl font-bold tracking-tight mb-2 text-white">{event.title}</h3>
@@ -177,11 +203,14 @@ export default function CoordinatorDashboard() {
                       <div className="text-[10px] font-mono text-white/40 uppercase tracking-widest mb-1">Capacity</div>
                       <div className="font-bold flex items-center gap-2 justify-center text-white"><Users className="w-4 h-4 text-cyan-400" /> {event.capacity}</div>
                     </div>
+                    <button onClick={() => downloadCSV(event.id, event.title)} className="px-4 py-3 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 font-bold text-sm font-mono transition-all border border-purple-500/30 backdrop-blur-md shadow-[0_0_15px_rgba(168,85,247,0.1)] flex items-center gap-2">
+                      <Download className="w-4 h-4" /> CSV
+                    </button>
                     <Link href="/coordinator/import" className="px-6 py-3 rounded-xl bg-white/5 hover:bg-cyan-500/20 text-cyan-400 font-bold text-sm font-mono transition-all border border-cyan-500/30 backdrop-blur-md shadow-[0_0_15px_rgba(6,182,212,0.1)]">
                       Upload Students
                     </Link>
                   </div>
-                </div>
+                </motion.div>
               ))
             )}
           </div>
