@@ -1,15 +1,17 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { Plus, UploadCloud, Users, Calendar, ScanLine, ArrowLeft, Terminal, Download } from 'lucide-react';
+import { Plus, UploadCloud, Users, Calendar, ScanLine, ArrowLeft, Terminal, Download, TrendingUp, Activity } from 'lucide-react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function CoordinatorDashboard() {
   const router = useRouter();
+  const [user, setUser] = useState<any>(null);
   const [events, setEvents] = useState<any[]>([]);
+  const [analytics, setAnalytics] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   
   // New event form state
@@ -28,9 +30,20 @@ export default function CoordinatorDashboard() {
     }
 
     try {
-      // NOTE: For demo purposes, we fetch all events. In a real app, you'd fetch only this coordinator's events.
-      const res = await axios.get('/api/events');
-      setEvents(res.data);
+      const resEvents = await axios.get('/api/events', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setEvents(resEvents.data);
+
+      // Fetch Analytics
+      try {
+        const resAnalytics = await axios.get('/api/events/analytics', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setAnalytics(resAnalytics.data);
+      } catch (e) {
+        console.error("Failed to load analytics");
+      }
     } catch (err: any) {
       console.error(err);
       if (err.response?.status === 401 || err.response?.status === 403) {
@@ -98,7 +111,7 @@ export default function CoordinatorDashboard() {
       <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-cyan-600/20 blur-[150px] pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-purple-600/20 blur-[150px] pointer-events-none" />
 
-      <nav className="max-w-6xl mx-auto flex items-center justify-between py-6 mb-8 border border-white/10 relative z-10 bg-white/[0.02] backdrop-blur-3xl px-8 rounded-3xl shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]">
+      <header className="max-w-6xl mx-auto flex items-center justify-between py-6 mb-8 border border-white/10 relative z-10 bg-white/[0.02] backdrop-blur-3xl px-8 rounded-3xl shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]">
         <div className="flex items-center gap-4">
           <div className="w-10 h-10 bg-purple-500/10 border border-purple-500/30 rounded-lg flex items-center justify-center text-purple-400 font-black shadow-[0_0_15px_rgba(168,85,247,0.2)]">
             C
@@ -108,12 +121,45 @@ export default function CoordinatorDashboard() {
             <div className="text-[10px] text-purple-400 font-mono tracking-widest uppercase">Event Management</div>
           </div>
         </div>
-        <button onClick={handleLogout} className="text-xs font-mono text-white/50 hover:text-red-400 transition-colors flex items-center gap-2">
-          <ArrowLeft className="w-4 h-4" /> Logout
-        </button>
-      </nav>
+        <div className="flex gap-4">
+          <Link href="/coordinator/scanner" className="px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-500 hover:from-cyan-400 hover:to-purple-400 text-white font-bold text-sm font-mono shadow-[0_0_20px_rgba(168,85,247,0.4)] transition-all flex items-center gap-2">
+            <ScanLine className="w-4 h-4" /> Open Scanner
+          </Link>
+          <Link href="/coordinator/import" className="px-6 py-3 rounded-xl bg-white/5 hover:bg-cyan-500/20 text-cyan-400 font-bold text-sm font-mono transition-all border border-cyan-500/30 backdrop-blur-md shadow-[0_0_15px_rgba(6,182,212,0.1)] flex items-center gap-2">
+            <UploadCloud className="w-4 h-4" /> Upload Students
+          </Link>
+          <button onClick={handleLogout} className="px-4 py-3 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 font-bold text-sm font-mono transition-all border border-red-500/30 backdrop-blur-md flex items-center gap-2 ml-2">
+            <ArrowLeft className="w-4 h-4" /> Logout
+          </button>
+        </div>
+      </header>
 
       <main className="max-w-6xl mx-auto space-y-8 relative z-10">
+        {/* Analytics Section */}
+        {analytics && (
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div className="bg-white/[0.02] backdrop-blur-2xl border border-white/10 rounded-3xl p-6 relative overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.3)] group">
+              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity"><Calendar className="w-16 h-16 text-cyan-400" /></div>
+              <div className="text-xs font-mono text-white/50 mb-1">Total Events</div>
+              <div className="text-3xl font-black text-white">{analytics.totalEvents}</div>
+            </div>
+            <div className="bg-white/[0.02] backdrop-blur-2xl border border-white/10 rounded-3xl p-6 relative overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.3)] group">
+              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity"><Users className="w-16 h-16 text-purple-400" /></div>
+              <div className="text-xs font-mono text-white/50 mb-1">Total Students</div>
+              <div className="text-3xl font-black text-white">{analytics.totalStudents}</div>
+            </div>
+            <div className="bg-white/[0.02] backdrop-blur-2xl border border-white/10 rounded-3xl p-6 relative overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.3)] group">
+              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity"><Activity className="w-16 h-16 text-green-400" /></div>
+              <div className="text-xs font-mono text-white/50 mb-1">Total Registrations</div>
+              <div className="text-3xl font-black text-white">{analytics.totalRegistrations}</div>
+            </div>
+            <div className="bg-white/[0.02] backdrop-blur-2xl border border-white/10 rounded-3xl p-6 relative overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.3)] group">
+              <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity"><TrendingUp className="w-16 h-16 text-red-400" /></div>
+              <div className="text-xs font-mono text-white/50 mb-1">Attendance Rate</div>
+              <div className="text-3xl font-black text-white">{analytics.attendanceRate}%</div>
+            </div>
+          </motion.div>
+        )}
         
         {/* Quick Actions */}
         <div className="grid md:grid-cols-3 gap-6">

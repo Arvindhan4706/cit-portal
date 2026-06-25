@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import QRCode from 'react-qr-code';
-import { RefreshCw, MapPin, Calendar, Clock, Ticket, AlertTriangle, ArrowLeft } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { RefreshCw, MapPin, Calendar, Clock, Ticket, AlertTriangle, ArrowLeft, Settings, X, Loader2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
@@ -17,6 +17,13 @@ export default function StudentDashboard() {
   const [qrToken, setQrToken] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState(30);
   const [qrError, setQrError] = useState<string | null>(null);
+
+  // Profile Edit State
+  const [showProfileEdit, setShowProfileEdit] = useState(false);
+  const [editName, setEditName] = useState('');
+  const [editDept, setEditDept] = useState('');
+  const [editYear, setEditYear] = useState('');
+  const [editSaving, setEditSaving] = useState(false);
 
   // Fetch user data on load
   useEffect(() => {
@@ -32,6 +39,9 @@ export default function StudentDashboard() {
           headers: { Authorization: `Bearer ${token}` }
         });
         setUser(res.data);
+        setEditName(res.data.name || '');
+        setEditDept(res.data.department || '');
+        setEditYear(res.data.year?.toString() || '');
         
         // Auto-select the first registered event if available
         if (res.data.registrations && res.data.registrations.length > 0) {
@@ -94,6 +104,27 @@ export default function StudentDashboard() {
     router.push('/');
   };
 
+  const handleUpdateProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setEditSaving(true);
+    const token = localStorage.getItem('token');
+    try {
+      const res = await axios.put('/api/auth/me', {
+        name: editName,
+        department: editDept,
+        year: editYear
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setUser((prev: any) => ({ ...prev, ...res.data }));
+      setShowProfileEdit(false);
+    } catch (err) {
+      alert("Failed to update profile.");
+    } finally {
+      setEditSaving(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-[#050505] to-black text-white p-6 md:p-12 relative overflow-hidden">
       {/* Heavy Glass Glow Effects */}
@@ -106,7 +137,10 @@ export default function StudentDashboard() {
           <p className="text-white/50 font-mono text-sm mt-1">Logged in as {user?.name} ({user?.roll_no})</p>
         </div>
         <div className="flex items-center gap-6">
-          <button onClick={handleLogout} className="text-xs font-mono text-white/50 hover:text-cyan-400 flex items-center gap-2 transition-colors">
+          <button onClick={() => setShowProfileEdit(true)} className="text-xs font-mono text-white/50 hover:text-cyan-400 flex items-center gap-2 transition-colors">
+            <Settings className="w-4 h-4" /> Edit Profile
+          </button>
+          <button onClick={handleLogout} className="text-xs font-mono text-white/50 hover:text-red-400 flex items-center gap-2 transition-colors">
             <ArrowLeft className="w-4 h-4" /> Logout
           </button>
           <motion.div whileHover={{ scale: 1.1, rotate: 5 }} className="w-12 h-12 rounded-xl bg-gradient-to-tr from-cyan-500 to-purple-500 flex items-center justify-center font-bold text-lg shadow-[0_0_20px_rgba(6,182,212,0.3)]">
@@ -212,6 +246,46 @@ export default function StudentDashboard() {
           100% { top: 0%; }
         }
       `}</style>
+
+      {/* Edit Profile Modal */}
+      <AnimatePresence>
+        {showProfileEdit && (
+          <motion.div 
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }}
+              className="bg-[#0a0a0a] border border-white/10 rounded-3xl p-8 max-w-md w-full relative shadow-[0_0_50px_rgba(6,182,212,0.15)]"
+            >
+              <button onClick={() => setShowProfileEdit(false)} className="absolute top-6 right-6 text-white/50 hover:text-white transition-colors">
+                <X className="w-5 h-5" />
+              </button>
+              
+              <h2 className="text-2xl font-black text-white mb-6 tracking-tight">Edit Profile</h2>
+              
+              <form onSubmit={handleUpdateProfile} className="space-y-4">
+                <div>
+                  <label className="text-xs font-mono text-white/50 mb-1 block">FULL NAME</label>
+                  <input required type="text" value={editName} onChange={(e)=>setEditName(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-cyan-400 outline-none transition-colors font-mono" />
+                </div>
+                <div>
+                  <label className="text-xs font-mono text-white/50 mb-1 block">DEPARTMENT</label>
+                  <input required type="text" value={editDept} onChange={(e)=>setEditDept(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-cyan-400 outline-none transition-colors font-mono uppercase" />
+                </div>
+                <div>
+                  <label className="text-xs font-mono text-white/50 mb-1 block">YEAR</label>
+                  <input required type="number" min="1" max="5" value={editYear} onChange={(e)=>setEditYear(e.target.value)} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:border-cyan-400 outline-none transition-colors font-mono" />
+                </div>
+                
+                <button disabled={editSaving} type="submit" className="w-full py-3 mt-4 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-xl text-white font-bold font-mono hover:from-cyan-400 hover:to-purple-400 transition-all flex items-center justify-center gap-2">
+                  {editSaving ? <Loader2 className="w-5 h-5 animate-spin" /> : 'SAVE CHANGES'}
+                </button>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

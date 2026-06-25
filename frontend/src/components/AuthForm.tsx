@@ -23,6 +23,13 @@ export default function AuthForm({ role, onSuccess, title, subtitle }: AuthFormP
     setLoading(true);
     setError('');
     
+    // Domain Validation
+    if (!email.endsWith('@citchennai.net')) {
+      setError('Please use your institutional email (@citchennai.net).');
+      setLoading(false);
+      return;
+    }
+
     // Basic Input Validation
     if (password.length > 50) {
       setError('Password is too long.');
@@ -167,6 +174,15 @@ export default function AuthForm({ role, onSuccess, title, subtitle }: AuthFormP
                 placeholder="Enter your password"
               />
             </div>
+          </div>
+          
+          <div className="flex justify-end pt-1">
+            <a 
+              href="/forgot-password" 
+              className={`text-xs font-mono font-bold text-${theme.color}-400 hover:text-white transition-colors`}
+            >
+              FORGOT PASSWORD?
+            </a>
           </div>
         </motion.div>
 

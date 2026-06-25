@@ -22,6 +22,10 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { email, password, expectedRole } = body;
 
+    if (!email.endsWith('@citchennai.net')) {
+      return NextResponse.json({ error: 'Only @citchennai.net institutional emails are allowed.' }, { status: 403 });
+    }
+
     // Sanitize input length
     if (password.length > 50) {
       return NextResponse.json({ error: 'Password is too long.' }, { status: 400 });
