@@ -19,7 +19,7 @@ export function SpotlightCard({ children, className = '' }: { children: React.Re
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setOpacity(1)}
       onMouseLeave={() => setOpacity(0)}
-      className={`relative overflow-hidden ${className}`}
+      className={`relative overflow-hidden glass-panel rounded-3xl ${className}`}
     >
       <div
         className="pointer-events-none absolute -inset-px opacity-0 transition duration-300"

@@ -94,7 +94,7 @@ export default function Home() {
               <Link href="/login/student" className="group flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-blue-500/80 to-blue-600/80 backdrop-blur-xl text-white rounded-xl font-bold hover:scale-105 transition-all shadow-[0_0_30px_rgba(59,130,246,0.4)] border border-blue-400/50">
                 Go to Dashboard <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
-              <Link href="/coordinator/import" className="group flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 bg-white/5 text-white border border-white/10 rounded-xl font-bold hover:bg-white/10 transition-all backdrop-blur-xl shadow-[0_8px_32px_0_rgba(0,0,0,0.2)]">
+              <Link href="/coordinator/import" className="group flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-4 glass-panel text-white rounded-xl font-bold hover:bg-white/10 transition-all">
                 <Terminal className="w-5 h-5 text-white/40 group-hover:text-blue-400 transition-colors" /> Upload Registrations
               </Link>
             </motion.div>

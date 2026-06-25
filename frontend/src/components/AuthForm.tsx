@@ -103,8 +103,8 @@ export default function AuthForm({ role, onSuccess, title, subtitle }: AuthFormP
       initial={{ opacity: 0, y: 20, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="w-full max-w-md bg-white/[0.03] backdrop-blur-3xl border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.4)] rounded-[2rem] p-8 md:p-10 relative overflow-hidden group"
     >
+      <div className={`w-full max-w-md glass-panel shadow-[0_8px_32px_rgba(0,0,0,0.4)] rounded-[2rem] p-8 md:p-10 relative overflow-hidden group`}>
       <div className={`absolute inset-0 bg-gradient-to-br ${theme.bgGrad} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none`} />
 
       <div className="mb-10 text-center relative z-10">
@@ -214,6 +214,7 @@ export default function AuthForm({ role, onSuccess, title, subtitle }: AuthFormP
           )}
         </motion.button>
       </form>
+      </div>
     </motion.div>
   );
 }
