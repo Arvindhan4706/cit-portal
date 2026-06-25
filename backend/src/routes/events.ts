@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { Pool } from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { authenticate } from '../middleware/auth';
+import { authorize } from '../middleware/roles';
 import { v4 as uuidv4 } from 'uuid';
 
 const router = Router();
@@ -20,7 +21,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-router.post('/', authenticate, async (req, res) => {
+router.post('/', authenticate, authorize(['FACULTY', 'COORDINATOR']), async (req, res) => {
   try {
     const { title, description, venue, date, capacity, clubId } = req.body;
     const event = await prisma.event.create({
@@ -39,7 +40,7 @@ router.post('/', authenticate, async (req, res) => {
   }
 });
 
-router.post('/:eventId/register', authenticate, async (req, res) => {
+router.post('/:eventId/register', authenticate, authorize(['STUDENT']), async (req, res) => {
   try {
     const eventId = req.params.eventId as string;
     const userId = (req as any).user.userId;
@@ -66,7 +67,7 @@ router.post('/:eventId/register', authenticate, async (req, res) => {
 });
 
 // Import registrations from external CSV/List (filtering for CIT emails)
-router.post('/:eventId/import', authenticate, async (req, res) => {
+router.post('/:eventId/import', authenticate, authorize(['COORDINATOR']), async (req, res) => {
   try {
     const eventId = req.params.eventId as string;
     const { emails } = req.body; // array of email strings

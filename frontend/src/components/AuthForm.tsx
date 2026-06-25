@@ -23,6 +23,13 @@ export default function AuthForm({ role, onSuccess, title, subtitle }: AuthFormP
     setLoading(true);
     setError('');
     
+    // Basic Input Validation
+    if (password.length > 50) {
+      setError('Password is too long.');
+      setLoading(false);
+      return;
+    }
+
     try {
       const res = await axios.post('http://localhost:5001/api/auth/login', {
         email,
@@ -31,7 +38,15 @@ export default function AuthForm({ role, onSuccess, title, subtitle }: AuthFormP
       });
       onSuccess(res.data.token, res.data.user);
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Authentication failed');
+      // Sanitize backend errors to prevent leaking sensitive information
+      let errorMessage = 'Authentication failed. Please check your credentials.';
+      if (err.response?.status === 401 || err.response?.status === 403 || err.response?.status === 404) {
+        errorMessage = 'Invalid email or password.';
+      } else if (err.response?.status === 429) {
+        errorMessage = 'Too many login attempts. Please try again later.';
+      }
+      
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -108,6 +123,7 @@ export default function AuthForm({ role, onSuccess, title, subtitle }: AuthFormP
               <input
                 type="email"
                 required
+                maxLength={100}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className={`block w-full pl-11 pr-4 py-3.5 bg-black/50 backdrop-blur-xl border border-white/10 rounded-xl focus:ring-2 transition-all text-white font-mono placeholder:text-white/20 outline-none ${theme.inputFocus}`}
@@ -124,6 +140,7 @@ export default function AuthForm({ role, onSuccess, title, subtitle }: AuthFormP
               <input
                 type="password"
                 required
+                maxLength={50}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className={`block w-full pl-11 pr-4 py-3.5 bg-black/50 backdrop-blur-xl border border-white/10 rounded-xl focus:ring-2 transition-all text-white font-mono placeholder:text-white/20 outline-none ${theme.inputFocus}`}

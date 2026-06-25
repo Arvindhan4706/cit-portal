@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { Pool } from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { authenticate } from '../middleware/auth';
+import { authorize } from '../middleware/roles';
 import jwt from 'jsonwebtoken';
 
 const router = Router();
@@ -14,7 +15,7 @@ const prisma = new PrismaClient({ adapter });
 const QR_SECRET = process.env.QR_SECRET || 'qr_super_secret';
 
 // Student requests a dynamic QR code for an event
-router.get('/qr/:eventId', authenticate, async (req, res) => {
+router.get('/qr/:eventId', authenticate, authorize(['STUDENT']), async (req, res) => {
   try {
     const eventId = req.params.eventId as string;
     const userId = (req as any).user.userId;
@@ -52,7 +53,7 @@ router.get('/qr/:eventId', authenticate, async (req, res) => {
 });
 
 // Coordinator scans the QR token
-router.post('/scan', authenticate, async (req, res) => {
+router.post('/scan', authenticate, authorize(['COORDINATOR']), async (req, res) => {
   try {
     const { qrToken } = req.body;
     // Verify token
@@ -92,7 +93,7 @@ router.post('/scan', authenticate, async (req, res) => {
 });
 
 // Faculty scans the QR token to verify registration (does not mark attendance)
-router.post('/verify', authenticate, async (req, res) => {
+router.post('/verify', authenticate, authorize(['FACULTY', 'COORDINATOR']), async (req, res) => {
   try {
     const { qrToken } = req.body;
     // Verify token
