@@ -6,6 +6,8 @@ import axios from 'axios';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { NumberTicker } from '@/components/NumberTicker';
+import { SpotlightCard } from '@/components/SpotlightCard';
 
 export default function CoordinatorDashboard() {
   const router = useRouter();
@@ -106,7 +108,7 @@ export default function CoordinatorDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-[#050505] to-black text-white p-6 md:p-12 relative overflow-hidden">
+    <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-[#050505] to-black text-white p-6 md:p-12 relative overflow-hidden bg-noise">
       {/* Heavy Glass Glow Effects */}
       <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-cyan-600/20 blur-[150px] pointer-events-none" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-purple-600/20 blur-[150px] pointer-events-none" />
@@ -138,26 +140,26 @@ export default function CoordinatorDashboard() {
         {/* Analytics Section */}
         {analytics && (
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <div className="bg-white/[0.02] backdrop-blur-2xl border border-white/10 rounded-3xl p-6 relative overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.3)] group">
+            <SpotlightCard className="bg-white/[0.02] backdrop-blur-2xl border border-white/10 rounded-3xl p-6 group">
               <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity"><Calendar className="w-16 h-16 text-cyan-400" /></div>
-              <div className="text-xs font-mono text-white/50 mb-1">Total Events</div>
-              <div className="text-3xl font-black text-white">{analytics.totalEvents}</div>
-            </div>
-            <div className="bg-white/[0.02] backdrop-blur-2xl border border-white/10 rounded-3xl p-6 relative overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.3)] group">
+              <div className="text-xs font-mono text-white/50 mb-1 relative z-10">Total Events</div>
+              <div className="text-3xl font-black text-white relative z-10"><NumberTicker value={analytics.totalEvents} /></div>
+            </SpotlightCard>
+            <SpotlightCard className="bg-white/[0.02] backdrop-blur-2xl border border-white/10 rounded-3xl p-6 group">
               <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity"><Users className="w-16 h-16 text-purple-400" /></div>
-              <div className="text-xs font-mono text-white/50 mb-1">Total Students</div>
-              <div className="text-3xl font-black text-white">{analytics.totalStudents}</div>
-            </div>
-            <div className="bg-white/[0.02] backdrop-blur-2xl border border-white/10 rounded-3xl p-6 relative overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.3)] group">
+              <div className="text-xs font-mono text-white/50 mb-1 relative z-10">Total Students</div>
+              <div className="text-3xl font-black text-white relative z-10"><NumberTicker value={analytics.totalStudents} /></div>
+            </SpotlightCard>
+            <SpotlightCard className="bg-white/[0.02] backdrop-blur-2xl border border-white/10 rounded-3xl p-6 group">
               <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity"><Activity className="w-16 h-16 text-green-400" /></div>
-              <div className="text-xs font-mono text-white/50 mb-1">Total Registrations</div>
-              <div className="text-3xl font-black text-white">{analytics.totalRegistrations}</div>
-            </div>
-            <div className="bg-white/[0.02] backdrop-blur-2xl border border-white/10 rounded-3xl p-6 relative overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.3)] group">
+              <div className="text-xs font-mono text-white/50 mb-1 relative z-10">Total Registrations</div>
+              <div className="text-3xl font-black text-white relative z-10"><NumberTicker value={analytics.totalRegistrations} /></div>
+            </SpotlightCard>
+            <SpotlightCard className="bg-white/[0.02] backdrop-blur-2xl border border-white/10 rounded-3xl p-6 group">
               <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity"><TrendingUp className="w-16 h-16 text-red-400" /></div>
-              <div className="text-xs font-mono text-white/50 mb-1">Attendance Rate</div>
-              <div className="text-3xl font-black text-white">{analytics.attendanceRate}%</div>
-            </div>
+              <div className="text-xs font-mono text-white/50 mb-1 relative z-10">Attendance Rate</div>
+              <div className="text-3xl font-black text-white relative z-10"><NumberTicker value={analytics.attendanceRate} suffix="%" /></div>
+            </SpotlightCard>
           </motion.div>
         )}
         
@@ -233,10 +235,9 @@ export default function CoordinatorDashboard() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.1 }}
-                  className="flex flex-col md:flex-row justify-between items-center bg-white/[0.02] backdrop-blur-2xl border border-white/10 rounded-3xl p-8 hover:bg-white/[0.04] transition-colors group shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] relative overflow-hidden"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-                  <div className="mb-6 md:mb-0 w-full md:w-auto relative z-10">
+                  <SpotlightCard className="flex flex-col md:flex-row justify-between items-center bg-white/[0.02] backdrop-blur-2xl border border-white/10 rounded-3xl p-8 hover:bg-white/[0.04] transition-colors group shadow-[0_8px_32px_0_rgba(0,0,0,0.3)]">
+                    <div className="mb-6 md:mb-0 w-full md:w-auto relative z-10">
                     <h3 className="text-2xl font-bold tracking-tight mb-2 text-white">{event.title}</h3>
                     <div className="flex gap-6 text-sm font-mono text-white/50">
                       <span className="flex items-center gap-1.5"><Terminal className="w-4 h-4 text-cyan-400" /> ID: {event.id.split('-')[0]}</span>
@@ -255,7 +256,8 @@ export default function CoordinatorDashboard() {
                     <Link href="/coordinator/import" className="px-6 py-3 rounded-xl bg-white/5 hover:bg-cyan-500/20 text-cyan-400 font-bold text-sm font-mono transition-all border border-cyan-500/30 backdrop-blur-md shadow-[0_0_15px_rgba(6,182,212,0.1)]">
                       Upload Students
                     </Link>
-                  </div>
+                    </div>
+                  </SpotlightCard>
                 </motion.div>
               ))
             )}

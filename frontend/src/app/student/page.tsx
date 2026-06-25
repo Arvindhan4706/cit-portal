@@ -6,6 +6,7 @@ import { RefreshCw, MapPin, Calendar, Clock, Ticket, AlertTriangle, ArrowLeft, S
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { SpotlightCard } from '@/components/SpotlightCard';
 
 export default function StudentDashboard() {
   const router = useRouter();
@@ -126,7 +127,7 @@ export default function StudentDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-[#050505] to-black text-white p-6 md:p-12 relative overflow-hidden">
+    <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-[#050505] to-black text-white p-6 md:p-12 relative overflow-hidden bg-noise">
       {/* Heavy Glass Glow Effects */}
       <div className="absolute top-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-cyan-600/20 blur-[150px] pointer-events-none" />
       <div className="absolute bottom-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-purple-600/20 blur-[150px] pointer-events-none" />
@@ -168,14 +169,14 @@ export default function StudentDashboard() {
                 transition={{ delay: i * 0.1 }}
                 whileHover={{ scale: 1.01 }}
                 onClick={() => setSelectedEventId(reg.eventId)}
-                className={`border rounded-3xl p-8 transition-all cursor-pointer relative overflow-hidden backdrop-blur-xl shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] ${
+                className="cursor-pointer group"
+              >
+                <SpotlightCard className={`border rounded-3xl p-8 transition-all relative overflow-hidden backdrop-blur-xl shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] ${
                   selectedEventId === reg.eventId 
                   ? 'bg-cyan-500/10 border-cyan-500/50 shadow-[0_0_30px_rgba(6,182,212,0.2)]' 
                   : 'bg-white/[0.02] border-white/10 hover:bg-white/[0.05] hover:border-cyan-500/30'
-                }`}
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] to-transparent opacity-0 hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-                <div className="flex justify-between items-start mb-6 relative z-10">
+                }`}>
+                  <div className="flex justify-between items-start mb-6 relative z-10">
                   <div>
                     <h3 className="text-2xl font-bold tracking-tight text-white">{reg.event.title}</h3>
                     <p className="text-cyan-400 font-medium mt-1 text-sm">{reg.event.venue}</p>
@@ -195,7 +196,8 @@ export default function StudentDashboard() {
                   <button className="w-full py-3 rounded-xl bg-white/5 text-cyan-400 font-bold hover:bg-cyan-500/20 transition-all font-mono text-sm border border-cyan-500/20">
                     Show Pass
                   </button>
-                )}
+                  )}
+                </SpotlightCard>
               </motion.div>
             ))
           )}

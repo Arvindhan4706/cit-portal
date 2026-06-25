@@ -40,8 +40,16 @@ export default function FacultyScanner() {
         headers: { Authorization: `Bearer ${token}` }
       });
       setResult(res.data);
+      // Haptic feedback (Vibrate for 100ms)
+      if (typeof navigator !== 'undefined' && navigator.vibrate) {
+        navigator.vibrate(100);
+      }
     } catch (err: any) {
       setError(err.response?.data?.error || 'Failed to verify QR Code. It might be expired.');
+      // Error haptic feedback (Vibrate twice quickly)
+      if (typeof navigator !== 'undefined' && navigator.vibrate) {
+        navigator.vibrate([50, 50, 50]);
+      }
     } finally {
       setLoading(false);
     }
