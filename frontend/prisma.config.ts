@@ -6,10 +6,9 @@ export default defineConfig({
     port: 5555,
   },
   migrate: {
-    databaseUrl: process.env.DIRECT_URL,
+    databaseUrl: 'file:./dev.db',
   },
-  // Add this block
   datasource: {
-    url: process.env.DATABASE_URL,
+    url: 'file:./dev.db',
   },
 });

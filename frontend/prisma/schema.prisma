@@ -1,29 +1,13 @@
 generator client {
   provider = "prisma-client-js"
+  engineType = "library"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
 }
 
-enum Role {
-  STUDENT
-  COORDINATOR
-  FACULTY
-  ADMIN
-}
-
-enum RegistrationStatus {
-  PENDING
-  CONFIRMED
-  CANCELLED
-}
-
-enum ODStatus {
-  PENDING
-  APPROVED
-  REJECTED
-}
+// Enums removed for SQLite compatibility
 
 model User {
   id            String         @id @default(uuid())
@@ -32,7 +16,7 @@ model User {
   roll_no       String?        @unique
   department    String?
   year          Int?
-  role          Role           @default(STUDENT)
+  role          String         @default("STUDENT")
   password      String
   
   // Relations
@@ -82,7 +66,7 @@ model Event {
 model Registration {
   id         String             @id @default(uuid())
   qr_code    String             @unique
-  status     RegistrationStatus @default(PENDING)
+  status     String             @default("PENDING")
   
   studentId  String
   student    User               @relation(fields: [studentId], references: [id])
@@ -110,7 +94,7 @@ model Attendance {
 
 model ODRequest {
   id         String    @id @default(uuid())
-  status     ODStatus  @default(PENDING)
+  status     String    @default("PENDING")
   
   studentId  String
   student    User      @relation(fields: [studentId], references: [id])

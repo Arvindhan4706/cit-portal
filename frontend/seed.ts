@@ -39,8 +39,7 @@ async function main() {
     const CHUNK_SIZE = 500;
     for (let i = 0; i < studentsToInsert.length; i += CHUNK_SIZE) {
       await prisma.user.createMany({
-        data: studentsToInsert.slice(i, i + CHUNK_SIZE),
-        skipDuplicates: true
+        data: studentsToInsert.slice(i, i + CHUNK_SIZE)
       });
     }
     console.log('Students seeded successfully!');
@@ -58,8 +57,7 @@ async function main() {
     
     for (let i = 0; i < facultyToInsert.length; i += CHUNK_SIZE) {
       await prisma.user.createMany({
-        data: facultyToInsert.slice(i, i + CHUNK_SIZE),
-        skipDuplicates: true
+        data: facultyToInsert.slice(i, i + CHUNK_SIZE)
       });
     }
     console.log('Faculty seeded successfully!');
