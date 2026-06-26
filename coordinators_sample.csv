@@ -1,0 +1,21 @@
+name,email,password,role,department,club_name
+Coordinator 1,coordinator1@citchennai.net,password123,COORDINATOR,,Robotics Club
+Coordinator 2,coordinator2@citchennai.net,password123,COORDINATOR,,IoT Club
+Coordinator 3,coordinator3@citchennai.net,password123,COORDINATOR,,AI Club
+Coordinator 4,coordinator4@citchennai.net,password123,COORDINATOR,,Cybersecurity Club
+Coordinator 5,coordinator5@citchennai.net,password123,COORDINATOR,,Dance Club
+Coordinator 6,coordinator6@citchennai.net,password123,COORDINATOR,,Music Club
+Coordinator 7,coordinator7@citchennai.net,password123,COORDINATOR,,Drama Club
+Coordinator 8,coordinator8@citchennai.net,password123,COORDINATOR,,Literary Club
+Coordinator 9,coordinator9@citchennai.net,password123,COORDINATOR,,Photography Club
+Coordinator 10,coordinator10@citchennai.net,password123,COORDINATOR,,Coding Club 1
+Coordinator 11,coordinator11@citchennai.net,password123,COORDINATOR,,Robotics Club 1
+Coordinator 12,coordinator12@citchennai.net,password123,COORDINATOR,,IoT Club 1
+Coordinator 13,coordinator13@citchennai.net,password123,COORDINATOR,,AI Club 1
+Coordinator 14,coordinator14@citchennai.net,password123,COORDINATOR,,Cybersecurity Club 1
+Coordinator 15,coordinator15@citchennai.net,password123,COORDINATOR,,Dance Club 1
+Coordinator 16,coordinator16@citchennai.net,password123,COORDINATOR,,Music Club 1
+Coordinator 17,coordinator17@citchennai.net,password123,COORDINATOR,,Drama Club 1
+Coordinator 18,coordinator18@citchennai.net,password123,COORDINATOR,,Literary Club 1
+Coordinator 19,coordinator19@citchennai.net,password123,COORDINATOR,,Photography Club 1
+Coordinator 20,coordinator20@citchennai.net,password123,COORDINATOR,,Coding Club 2

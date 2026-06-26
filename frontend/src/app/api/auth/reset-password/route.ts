@@ -49,9 +49,7 @@ export async function POST(req: NextRequest) {
     await prisma.user.update({
       where: { id: user.id },
       data: { 
-        password: hashedPassword,
-        failedLoginAttempts: 0, // Reset lockout if they reset password
-        lockoutUntil: null 
+        password: hashedPassword
       }
     });
 

@@ -41,9 +41,6 @@ model User {
   certificates  Certificate[]
   clubs         Club[]         @relation("ClubHead")
 
-  failedLoginAttempts Int      @default(0)
-  lockoutUntil        DateTime?
-
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
 }
