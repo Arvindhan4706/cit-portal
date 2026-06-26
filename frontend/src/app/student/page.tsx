@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import QRCode from 'react-qr-code';
-import { RefreshCw, MapPin, Calendar, Clock, Ticket, AlertTriangle, ArrowLeft, Settings, X, Loader2 } from 'lucide-react';
+import { RefreshCw, MapPin, Calendar, Clock, Ticket, AlertTriangle, ArrowLeft, Settings, X, Loader2, Download } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
@@ -126,6 +126,37 @@ export default function StudentDashboard() {
     }
   };
 
+  const handleDownloadCertificate = async (eventId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`/api/events/${eventId}/certificate`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        alert(error.error || 'Failed to download certificate');
+        return;
+      }
+      
+      // Create blob link to download
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Certificate_${eventId}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Download error:', error);
+      alert('An error occurred while downloading the certificate.');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-950 via-slate-900 to-slate-950 text-white p-6 md:p-12 relative overflow-hidden bg-noise">
       {/* Heavy Glass Glow Effects */}
@@ -192,11 +223,19 @@ export default function StudentDashboard() {
                   <div className="col-span-2 flex items-center gap-2"><Ticket className="w-4 h-4" /> Pass ID: {reg.id.split('-')[0]}</div>
                 </div>
                 
-                {selectedEventId !== reg.eventId && (
+                {selectedEventId !== reg.eventId && !reg.attendance && (
                   <button className="w-full py-3 rounded-xl bg-white/5 text-blue-400 font-bold hover:bg-blue-500/20 transition-all font-mono text-sm border border-blue-500/20">
                     Show Pass
                   </button>
                   )}
+                  
+                {reg.attendance && (
+                  <button 
+                    onClick={(e) => handleDownloadCertificate(reg.eventId, e)}
+                    className="w-full mt-4 flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-sky-600 text-white font-bold hover:from-blue-500 hover:to-sky-500 transition-all font-mono text-sm shadow-[0_0_20px_rgba(56,189,248,0.3)]">
+                    <Download className="w-4 h-4" /> Download Certificate
+                  </button>
+                )}
                 </SpotlightCard>
               </motion.div>
             ))

@@ -11,7 +11,8 @@ export async function GET(req: NextRequest) {
       include: {
         registrations: {
           include: {
-            event: true
+            event: true,
+            attendance: true
           }
         }
       }
