@@ -18,6 +18,7 @@ export async function POST(req: NextRequest) {
     // Find the user
     const user = await prisma.user.findUnique({
       where: { email },
+      include: { clubs: true }
     });
 
     if (!user) {
@@ -32,9 +33,10 @@ export async function POST(req: NextRequest) {
     let verified = false;
     if (role === 'STUDENT') {
       verified = user.roll_no === securityVerification;
-    } else {
-      // Faculty and Coordinators verify via their Department code/name
+    } else if (role === 'FACULTY') {
       verified = user.department === securityVerification;
+    } else if (role === 'COORDINATOR') {
+      verified = user.clubs && user.clubs.some((c: any) => c.name.toUpperCase() === securityVerification.toUpperCase());
     }
 
     if (!verified) {

@@ -123,12 +123,18 @@ export default function ForgotPasswordPage() {
 
               <div className="space-y-1.5">
                 <label className="text-xs font-mono text-white/50">
-                  {role === 'STUDENT' ? 'ROLL NUMBER (SECURITY CHECK)' : 'DEPARTMENT (SECURITY CHECK)'}
+                  {role === 'STUDENT' ? 'ROLL NUMBER (SECURITY CHECK)' : 
+                   role === 'FACULTY' ? 'DEPARTMENT (SECURITY CHECK)' : 
+                   'CLUB NAME (SECURITY CHECK)'}
                 </label>
                 <input
                   required type="text" value={securityVerification} onChange={(e) => setSecurityVerification(e.target.value.toUpperCase())}
                   className="w-full bg-black/50 border border-white/10 rounded-xl py-3 px-4 text-white placeholder-white/20 focus:border-red-500 outline-none font-mono text-sm transition-colors uppercase"
-                  placeholder={role === 'STUDENT' ? 'e.g. 21IT001' : 'e.g. CSE'}
+                  placeholder={
+                    role === 'STUDENT' ? 'e.g. 21IT001' : 
+                    role === 'FACULTY' ? 'e.g. CSE' : 
+                    'e.g. CODING CLUB'
+                  }
                 />
               </div>
 
